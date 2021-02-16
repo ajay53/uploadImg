@@ -8,6 +8,9 @@ import com.example.uploadimg.database.dao.UserDao;
 import com.example.uploadimg.model.User;
 import com.example.uploadimg.utility.AsyncResponse;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class UserRepository {
 
     private final UserDao userDao;
@@ -18,15 +21,21 @@ public class UserRepository {
     }
 
     public void getUser(String username, AsyncResponse asyncResponse) {
-        new GetUserAsyncTask(asyncResponse, userDao).execute(username);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> asyncResponse.onAsyncProcessFinish(userDao.get(username)));
+//        new GetUserAsyncTask(asyncResponse, userDao).execute(username);
     }
 
-    public void getDuplicate(String emailID, String PhoneNo, AsyncResponse asyncResponse) {
-        new GetDuplicateAsyncTask(asyncResponse, userDao).execute(emailID, PhoneNo);
+    public void getDuplicate(String emailID, String phoneNo, AsyncResponse asyncResponse) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> asyncResponse.onAsyncProcessFinish(userDao.getDuplicate(emailID, phoneNo)));
+//        new GetDuplicateAsyncTask(asyncResponse, userDao).execute(emailID, phoneNo);
     }
 
     public void insert(User user) {
-        new InsertUserAsyncTask(userDao).execute(user);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> userDao.insert(user));
+//        new InsertUserAsyncTask(userDao).execute(user);
     }
 
     private static class GetUserAsyncTask extends AsyncTask<String, Void, User> {

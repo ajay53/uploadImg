@@ -34,7 +34,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_registration);
-        user = new User(null, null, null, null, null, null);
+        user = new User(null, "", null, null, null, null);
         binding.setUser(user);
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
